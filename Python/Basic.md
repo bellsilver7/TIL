@@ -44,6 +44,8 @@ print(4 / 2) # 2
 print(4 / 3) # 1.3333333333333333
 ```
 
+## 기타 연산
+
 ### 나머지
 ```python
 print(4 % 2) # 0
@@ -53,4 +55,14 @@ print(4 % 3) # 1
 ### 몫
 ```python
 print(4 // 3) # 1
+```
+
+## 비교 연산
+```python
+print(a > b) # a가 b의 값보다 크면 True
+print(a >= b) # a가 b의 값보다 크거나 같으면 True
+print(a < b) # a가 b의 값보다 작으면 True
+print(a <= b) # a가 b의 값보다 작거나 같으면 True
+print(a == b) # a와 b의 값이 같으면 True
+print(a != b) # a와 b의 값이 다르면 True
 ```
