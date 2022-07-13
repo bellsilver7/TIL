@@ -21,6 +21,28 @@ string1, string2 = input().split()
 map(int, input().split())
 ```
 
+### 입력받는 다른 방법
+```python
+import sys # 시스템 모듈 추가
+print(sys.stdin.readline())
+```
+```python
+import sys
+input = sys.stdin.readline # 상단에 선언 후 아래에서 간단히 사용할 수 있다.
+print(input())
+```
+
+### 출력하는 방법
+```python
+string = '문자열'
+print(string)
+```
+
+### 줄바꿈 없이 출력하는 방법
+```python
+print(string, end='') # 기본적으로 end='\n' 이렇게 개행문자가 들어가 있다고 생각하면 된다.
+```
+
 ## 사칙연산
 
 ### 더하기
