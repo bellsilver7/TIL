@@ -34,3 +34,45 @@ else:
 ```
 
 ## 반복문
+
+- while문 기본 구조
+
+```python
+while 조건문:
+  # 실행 코드
+```
+
+- for문 기본 구조
+
+```python
+for 변수 in 리스트(또는 튜플, 문자열):
+  # 실행코드
+```
+
+- continue 와 break
+
+```python
+for i in range(10):
+  # 실행코드
+  continue # 여기까지 실행 후 다음 조건 실행
+  # 실행코드
+  
+for i in range(10):
+  # 실행코드
+  break # 여기까지 실행 후 반복문 종료
+  # 실행코드
+```
+
+- range 함수
+
+```python
+for number in range(10): # 0부터 9까지의 수를 반복
+  # 실행코드
+
+for number in range(1, 11): # 1부터 10까지의 수를 반복
+  # 실행코드
+  
+for number in range(10, 0, -1): # 10부터 1까지의 수를 반복
+  # 실행코드
+```
+ 
