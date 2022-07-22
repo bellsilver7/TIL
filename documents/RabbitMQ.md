@@ -73,31 +73,31 @@ RabbitMQ는 메시지 브로커로 메시지를 수락하고 전달합니다. �
 
 - Consuming : 받는 것과 비슷한 의미를 가지고 있습니다. consumer는 대부분 메시지 수신을 기다리는 프로그램입니다.
 
-1. **"Hello World!"** : 어떤 일을 하는 가장 단순한 것
+1. **"Hello World!"** : 어떤 일을 하는 가장 단순한 것 [[이동](./RabbitMQ/rabbitmq-tutorial-hello-world.md)]
 
    ![image](https://www.rabbitmq.com/img/tutorials/python-one.png)
 
-2. **Work queues** : 작업자 간의 작업 분배 (the competing consumers pattern)
+2. **Work queues** : 작업자 간의 작업 분배 (the competing consumers pattern) [[이동](./RabbitMQ/rabbitmq-tutorial-work-queues.md)]
 
    ![image](https://www.rabbitmq.com/img/tutorials/python-two.png)
 
-3. **Publish/Subscribe** : 한 번에 많은 소비자에게 메시지 보내기
+3. **Publish/Subscribe** : 한 번에 많은 소비자에게 메시지 보내기 [[이동](./RabbitMQ/rabbitmq-tutorial-publish-subscribe.md)]
 
    ![image](https://www.rabbitmq.com/img/tutorials/python-three.png)
 
-4. **routing** : 메시지를 선택적으로 수신
+4. **routing** : 메시지를 선택적으로 수신 [[이동](./RabbitMQ/rabbitmq-tutorial-routing.md)]
 
    ![image](https://www.rabbitmq.com/img/tutorials/python-four.png)
 
-5. **Topics** : 패턴 기반 메시지 수신 (topics)
+5. **Topics** : 패턴 기반 메시지 수신 (topics) [[이동](./RabbitMQ/rabbitmq-tutorial-topics.md)]
 
    ![image](https://www.rabbitmq.com/img/tutorials/python-five.png)
 
-6. **RPC** : 요청/응답 패턴
+6. **RPC** : 요청/응답 패턴 [[이동](./RabbitMQ/rabbitmq-tutorial-rpc.md)]
 
    ![image](https://www.rabbitmq.com/img/tutorials/python-six.png)
 
-7. **Publisher Confirms** : Reliable publishing with publisher confirms
+7. **Publisher Confirms** : Reliable publishing with publisher confirms [[이동](./RabbitMQ/rabbitmq-tutorial-publisher-confirms.md)]
 
 <br>
 <br>
