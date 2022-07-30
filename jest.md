@@ -5,8 +5,8 @@
 - [특징](#특징)
 - [시작하기](#시작하기)
     - [준비](#준비)
-    - [파일 생성](#파일생성)
-    - [테스트 실행](#테스트실행)
+    - [파일 생성](#파일-생성)
+    - [테스트 실행](#테스트-실행)
 - [Matchers](#Matchers)
     - [공통일치](#공통일치)
     - [진위확인](#진위확인)
@@ -19,7 +19,12 @@
     - [Promise](#promise)
     - [.resolves/.rejects](#resolvesrejects)
     - [Async/Await](#asyncawait)
-
+- [Setup and Teardown](#setup-and-teardown)
+    - [반복 설정](#반복-설정)
+    - [일회성 설정](#일회성-설정)
+    - [범위 지정](#범위-지정)
+    - [실행 명령](#실행-명령)
+    - [일반 조언](#일반-조언)
 # 특징
 
 **FAST AND SAFE**: 테스트의 전체 상태를 고유하게 유지함으로써 안정적인 병렬실행을 할 수 있습니다. 테스트를 빠르게 하기 위해 이전에 실패한 테스트를 먼저 실행하고 테스트 파일 소요 시간에 따라 실행을 재구성합니다.
@@ -314,3 +319,198 @@ test('데이터를 가져오는데 에러가 발생했습니다.', async () => {
   await expect(fetchData()).rejects.toMatch('에러');
 });
 ```
+
+# Setup and Teardown
+
+## 반복 설정
+
+```javascript
+beforeEach(() => { // 각 테스트 전에 실행
+  initializeCityDatabase();
+  // initializeCityDatabase가 Promise를 반환한다면 return하면 됩니다.
+  //return initializeCityDatabase();
+});
+
+afterEach(() => { // 각 테스트 후에 실행
+  clearCityDatabase();
+});
+
+test("도시 DB에는 의정부가 있다.", () => {
+  expect(isCity("의정부")).toBeTruthy();
+});
+
+test("도시 DB에는 춘천이 있다.", () => {
+  expect(isCity("춘천")).toBeTruthy();
+});
+```
+
+## 일회성 설정
+
+```javascript
+beforeAll(() => { // 파일 처음에 한 번 실행
+  return initializeCityDatabase();
+});
+
+afterAll(() => { // 파일 마지막에 한 번 실행
+  return clearCityDatabase();
+});
+
+test("도시 DB에는 의정부가 있다.", () => {
+  expect(isCity("의정부")).toBeTruthy();
+});
+
+test("도시 DB에는 춘천이 있다.", () => {
+  expect(isCity("춘천")).toBeTruthy();
+});
+```
+
+## 범위 지정
+
+`describe` 블록을 사용해 테스트를 그룹화할 수 있습니다.
+
+```javascript
+// 이 파일의 모든 테스트에 적용됩니다.
+beforeEach(() => {
+  return initializeCityDatabase();
+});
+
+test("도시 DB에는 의정부가 있다.", () => {
+  expect(isCity("도시")).toBeTruthy();
+});
+
+test("도시 DB에는 춘천이 있다.", () => {
+  expect(isCity("춘천")).toBeTruthy();
+});
+
+describe("도시별 음식 매칭", () => {
+  // 이 블록의 테스트에만 적용됩니다.
+  beforeEach(() => {
+    return initializeFoodDatabase();
+  });
+
+  test("의정부 <3 햄", () => {
+    expect(isValidCityFoodPair("의정부", "부대찌개")).toBe(true);
+  });
+
+  test("춘천 <3 닭고기", () => {
+    expect(isValidCityFoodPair("춘천", "닭갈비")).toBe(true);
+  });
+});
+```
+
+### 실행 순서
+
+```javascript
+beforeAll(() => console.log("1 - beforeAll"));
+afterAll(() => console.log("1 - afterAll"));
+beforeEach(() => console.log("1 - beforeEach"));
+afterEach(() => console.log("1 - afterEach"));
+
+test("", () => console.log("1 - 테스트"));
+
+describe("범위 블록", () => {
+  beforeAll(() => console.log("2 - beforeAll"));
+  afterAll(() => console.log("2 - afterAll"));
+  beforeEach(() => console.log("2 - beforeEach"));
+  afterEach(() => console.log("2 - afterEach"));
+
+  test("", () => console.log("2 - 테스트"));
+});
+
+// 1 - beforeAll
+// 1 - beforeEach
+// 1 - test
+// 1 - afterEach
+// 2 - beforeAll
+// 1 - beforeEach
+// 2 - beforeEach
+// 2 - test
+// 2 - afterEach
+// 1 - afterEach
+// 2 - afterAll
+// 1 - afterAll
+```
+
+## 실행 명령
+
+Jest는 실제 테스트를 실행하기 전에 테스트 파일의 모든 `describe`을 실행합니다.
+
+```javascript
+describe("describe 밖", () => {
+  console.log("describe 밖-a");
+
+  describe("describe 안 1", () => {
+    console.log("describe 안 1");
+
+    test("테스트 1", () => console.log("테스트 1"));
+  });
+
+  console.log("describe 밖-b");
+
+  test("테스트 2", () => console.log("테스트 2"));
+
+  describe("describe 안 2", () => {
+    console.log("describe 안 2");
+
+    test("테스트 3", () => console.log("테스트 3"));
+  });
+
+  console.log("describe 밖-c");
+});
+
+// describe 밖-a
+// describe 안 1
+// describe 밖-b
+// describe 안 2
+// describe 밖-c
+// 테스트 1
+// 테스트 2
+// 테스트 3
+```
+
+```javascript
+beforeEach(() => console.log("connection setup"));
+beforeEach(() => console.log("database setup"));
+
+afterEach(() => console.log("database teardown"));
+afterEach(() => console.log("connection teardown"));
+
+test("테스트 1", () => console.log("테스트 1"));
+
+describe("extra", () => {
+  beforeEach(() => console.log("extra database setup"));
+  afterEach(() => console.log("extra database teardown"));
+
+  test("테스트 2", () => console.log("테스트 2"));
+});
+
+// connection setup
+// database setup
+// 테스트 1
+// database teardown
+// connection teardown
+
+// connection setup
+// database setup
+// extra database setup
+// 테스트 2
+// extra database teardown
+// database teardown
+// connection teardown
+```
+
+## 일반 조언
+
+하나의 테스트만 실패할 경우 다음과 같이 해당 테스트만 실행해 볼 수 있습니다.
+
+```javascript
+test.only('this will be the only test that runs', () => {
+  expect(true).toBe(false);
+});
+
+test('this test will not run', () => {
+  expect('A').toBe('A');
+});
+```
+
+단독으로 실행할 때 실패하지 않는 테스트일 경우 테스트를 방해하는 요소가 있는 것이 분명합니다. 이 문제는 `beforeEach`로 일부 공유 상태를 지우는 방법으로 해결할 수 있습니다. 일부 공유 상태가 수정되고 있는지 확실하지 않은 경우 데이터를 기록하는 `beforeEach`도 시도할 수 있습니다.
