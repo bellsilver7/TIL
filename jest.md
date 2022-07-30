@@ -4,7 +4,21 @@
 
 - [특징](#특징)
 - [시작하기](#시작하기)
+    - [준비](#준비)
+    - [파일 생성](#파일생성)
+    - [테스트 실행](#테스트실행)
 - [Matchers](#Matchers)
+    - [공통일치](#공통일치)
+    - [진위확인](#진위확인)
+    - [숫자](#숫자)
+    - [문자열](#문자열)
+    - [배열](#배열)
+    - [예외](#예외)
+- [Testing Asynchronous Code](#testing-asynchronous-code)
+    - [Callback](#callback)
+    - [Promise](#promise)
+    - [.resolves/.rejects](#resolvesrejects)
+    - [Async/Await](#asyncawait)
 
 # 특징
 
@@ -208,5 +222,95 @@ test("에러 발생", () => {
   // 정확한 오류 메시지나 정규식(regexp)을 사용할 수도 있습니다.
   expect(() => handleFormSubmit()).toThrow("폼 오류");
   expect(() => handleFormSubmit()).toThrow(/폼/);
+});
+```
+
+# Testing Asynchronous Code
+
+## Callback
+
+```javascript
+// 이렇게 작동하지 않습니다.
+test('데이터는 바나나입니다', () => {
+  function callback(error, data) {
+    if (error) {
+      throw error;
+    }
+    expect(data).toBe("바나나");
+  }
+
+  fetchData(callback);
+});
+```
+
+```javascript
+// done이라는 단일 인수를 사용합니다.
+test('데이터는 바나나입니다', done => {
+  function callback(error, data) {
+    if (error) {
+      done(error);
+      return;
+    }
+    try {
+      expect(data).toBe("바나나");
+      done();
+    } catch (error) {
+      done(error);
+    }
+  }
+
+  fetchData(callback);
+});
+```
+
+## Promise
+
+```javascript
+test("데이터는 바나나입니다.", () => {
+  // promise를 return하면 resolve를 기다립니다.
+  return fetchData().then((data) => {
+    expect(data).toBe("바나나");
+  });
+});
+```
+
+## .resolves/.rejects
+
+```javascript
+test('데이터는 바나나입니다.', () => {
+  return expect(fetchData()).resolves.toBe("바나나");
+});
+
+test('데이터를 가져오는데 에러가 발생했습니다.', () => {
+  return expect(fetchData()).rejects.toMatch('에러');
+});
+```
+
+## Async/Await
+
+```javascript
+test("데이터는 바나나입니다.", async () => {
+    const data = await fetchData();
+    expect(data).toBe("바나나");
+});
+
+test('데이터를 가져오는데 에러가 발생했습니다.', async () => {
+  expect.assertions(1);
+  try {
+    await fetchData();
+  } catch (e) {
+    expect(e).toMatch('error');
+  }
+});
+```
+
+```javascript
+// .resolves 또는 .rejects와 함께 사용할 경우
+test('데이터는 바나나입니다.', async () => {
+  await expect(fetchData()).resolves.toBe("바나나");
+});
+
+test('데이터를 가져오는데 에러가 발생했습니다.', async () => {
+  await expect(fetchData()).rejects.toMatch('에러');
 });
 ```
